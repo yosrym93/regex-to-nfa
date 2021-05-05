@@ -26,7 +26,8 @@ def _gen_state_edges(state: Dict) -> Generator[_Edge, None, None]:
 
 def render(graph: Dict, pattern: str):
     """ render takes the final graph output and renders it using graphviz """
-    dot = Digraph(comment=f"NFA Graph for regex='{pattern}'")
+    dot = Digraph(comment=f"NFA Graph for regex='{pattern}'",
+                  graph_attr={'rankdir': 'LR'})
 
     for state, v in _gen_states(graph):
         # node
