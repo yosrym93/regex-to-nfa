@@ -1,5 +1,5 @@
 #!/bin/env python3
-"""
+"""\
 Usage: regex_nfa.py pattern
 Turn regex pattern into equivalent NFA using Thompson's algorithm.
 Also renders NFA's graph.
