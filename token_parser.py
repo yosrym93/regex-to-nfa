@@ -65,7 +65,7 @@ def regex_to_tokens(pattern: str) -> TokenType:
         if i != -1:
             err(f'invalid token at index {i}')
 
-    t = CharToken(pattern[0])
+    t = _get_chartoken(pattern)
     i = 1
     while i < len(pattern):
         if pattern[i] not in ALL_META:

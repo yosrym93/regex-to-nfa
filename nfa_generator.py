@@ -94,7 +94,6 @@ def tokens_to_nfa(tokens: Token) -> Dict:
     tokens_to_nfa turns the tokens after parsing to NFA graph
     output is a dictionary following the output specs in the requirements file
     """
-    print(tokens)
     initial_state = State.new()
     final_state = State.new(is_terminating=True)
     next_state_id = generate_token_states(tokens, [final_state.id])
