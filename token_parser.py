@@ -1,4 +1,4 @@
-from typing import NamedTuple, Union
+from typing import NamedTuple, Tuple, Union
 from constants import *
 from utils import *
 
@@ -30,21 +30,20 @@ class ZeroOrMoreToken(NamedTuple):
 TokenType = Union[Token, CharToken, AndToken, OrToken, ZeroOrMoreToken]
 
 
-def _invalid_strs():
-    for a in ALL_META:
-        for b in ALL_META:
-            yield f'{a}{b}'
+def _get_chartoken(pattern: str) -> Tuple[TokenType, int]:
+    # \
+    if pattern[0] == ESC:
+        if pattern[1] not in ESCAPABLE:
+            err('pattern has invalid escaped character,', pattern[1])
 
+        return CharToken(pattern[1]), 2
 
-def _get_chartoken(pattern: str) -> TokenType:
-    assert len(pattern) >= 1
-
-    ct = CharToken(pattern[0])
-
-    # peek to see *
+    # peek *
     if len(pattern) >= 2 and pattern[1] == '*':
-        return ZeroOrMoreToken(ct)
-    return ct
+        return ZeroOrMoreToken(CharToken(pattern[0])), 2
+
+    # character
+    return CharToken(pattern[0]), 1
 
 
 def regex_to_tokens(pattern: str) -> TokenType:
@@ -55,29 +54,30 @@ def regex_to_tokens(pattern: str) -> TokenType:
     if len(pattern) == 0:
         return CharToken('')
 
-    # handle all possible errors
+    # META at first
     if pattern[0] in ALL_META:
         err('invalid token at index 0')
-    if pattern[-1] in OR_META:
+    # non-escaped META at end
+    if len(pattern) >= 2 and pattern[-1] in OR_META and pattern[-2] != ESC:
         err(f'invalid token at index {len(pattern)}')
-    for s in _invalid_strs():
-        i = pattern.find(s)
-        if i != -1:
-            err(f'invalid token at index {i}')
+    # ESC at end
+    if pattern[-1] == ESC:
+        err(f'invalid token at index {len(pattern)}')
 
-    t = _get_chartoken(pattern)
-    i = 1
+    t, i = _get_chartoken(pattern)
     while i < len(pattern):
-        if pattern[i] not in ALL_META:
-            t = AndToken(t, _get_chartoken(pattern[i:]))
-        elif pattern[i] in OR_META:
+        if pattern[i] not in ALL_META:  # and
+            c, inc = _get_chartoken(pattern[i:])
+            t = AndToken(t, c)
+            i += inc
+        elif pattern[i] in OR_META:  # or
             # safe to check next character
             # we know there is no + or | at the end
             i += 1
-            t = OrToken(t, _get_chartoken(pattern[i:]))
-        else:  # * is handled
-            pass
-
-        i += 1
+            c, inc = _get_chartoken(pattern[i:])
+            t = OrToken(t, c)
+            i += inc
+        else:
+            assert False, 'unreachable'
 
     return t
