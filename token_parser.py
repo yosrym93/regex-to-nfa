@@ -29,6 +29,7 @@ class ZeroOrMoreToken(NamedTuple):
 
 TokenType = Union[Token, CharToken, AndToken, OrToken, ZeroOrMoreToken]
 
+
 def _invalid_strs():
     for a in ALL_META:
         for b in ALL_META:
