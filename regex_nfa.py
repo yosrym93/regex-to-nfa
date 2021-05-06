@@ -31,7 +31,8 @@ def main():
     tokens = regex_to_tokens(pattern)
     graph = tokens_to_nfa(tokens)
 
-    pretty_print_graph(graph)
+    # print(tokens)
+    # pretty_print_graph(graph)
     write_graph(graph)
     render(graph, pattern)
 
