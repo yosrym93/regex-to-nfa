@@ -8,6 +8,9 @@ Call regex_nfa.py with regex pattern:
 $ python3 ./regex_nfa.py 'A(B|A)*'
 ```
 
+> Note: you must pass expressions in single quotes like 'A*' otherwise 
+> the shell will expand the * sign
+
 # Compilers Assignment 1 - Thompson's Algorithm
 - Mahmoud Othman - BN 2 - SEC 19
 - Yosry Mohammad - BN 2 - SEC 33
