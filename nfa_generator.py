@@ -57,12 +57,15 @@ def generate_and_token_states(token: AndToken, next_states_ids: List[int]) -> in
 
 
 def generate_or_token_states(token: OrToken, next_states_ids: List[int]) -> int:
-    s = State.new()
-    s1_id = generate_token_states(token.a, next_states_ids)
-    s2_id = generate_token_states(token.b, next_states_ids)
-    s.add_transition(EPSILON, s1_id)
-    s.add_transition(EPSILON, s2_id)
-    return s.id
+    s1 = State.new()
+    s4 = State.new()
+    for next_state_id in next_states_ids:
+        s4.add_transition(EPSILON, next_state_id)
+    s2_id = generate_token_states(token.a, [s4.id])
+    s3_id = generate_token_states(token.b, [s4.id])
+    s1.add_transition(EPSILON, s2_id)
+    s1.add_transition(EPSILON, s3_id)
+    return s1.id
 
 
 def generate_zero_or_more_token_states(token: ZeroOrMoreToken, next_states_ids: List[int]) -> int:
