@@ -6,7 +6,7 @@ from token_parser import Token, CharToken, AndToken, OrToken, ZeroOrMoreToken, T
 
 
 class State:
-    _next_state_id: int = 0
+    _next_state_id: int = 1
     _states: List = []
 
     @classmethod
@@ -17,8 +17,8 @@ class State:
         return s
 
     @classmethod
-    def get_nfa_dict(cls):
-        nfa = {"startingState": "S0"}
+    def get_nfa_dict(cls, initial_state_id):
+        nfa = {"startingState": f"S{initial_state_id}"}
         for state in cls._states:
             state_name = f'S{state.id}'
             nfa[state_name] = {"isTerminatingState": state.is_terminating}
@@ -97,8 +97,6 @@ def tokens_to_nfa(tokens: Token) -> Dict:
     tokens_to_nfa turns the tokens after parsing to NFA graph
     output is a dictionary following the output specs in the requirements file
     """
-    initial_state = State.new()
     final_state = State.new(is_terminating=True)
-    next_state_id = generate_token_states(tokens, [final_state.id])
-    initial_state.add_transition(EPSILON, next_state_id)
-    return State.get_nfa_dict()
+    initial_state_id = generate_token_states(tokens, [final_state.id])
+    return State.get_nfa_dict(initial_state_id)
