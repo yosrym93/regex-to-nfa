@@ -1,17 +1,8 @@
 #!/bin/env python3
 """\
-Usage: regex_nfa.py pattern
-Turn regex pattern into equivalent NFA using Thompson's algorithm.
-Also renders NFA's graph.
-
-Compilers Assignment 1 - Thompson's Algorithm
-    Mahmoud Othman - BN 2 - SEC 19
-    Yosry Mohammad - BN 2 - SEC 33
-
-Dependencies
-    python3, python3-pip, graphviz, py-graphviz
-    $ sudo apt update && sudo apt install -y graphviz python3 python3-pip
-    $ sudo python3 -m pip install graphviz \
+Usage: regex_nfa.py <regex pattern>
+    Turn regex pattern into equivalent NFA using Thompson's algorithm and renders NFA's graph.
+    Outputs graph.png and graph.json \
 """
 from utils import *
 from token_parser import regex_to_tokens
