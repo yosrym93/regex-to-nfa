@@ -24,7 +24,7 @@ def _gen_state_edges(state: Dict) -> Generator[_Edge, None, None]:
             yield _Edge(trigger=k, to=next_state)
 
 
-def render(graph: Dict, pattern: str):
+def render(graph: Dict, pattern: str, path: str = './graph'):
     """ render takes the final graph output and renders it using graphviz """
     dot = Digraph(comment=f"NFA Graph for regex='{pattern}'",
                   graph_attr={'rankdir': 'LR', 'pad': '1'})
@@ -42,4 +42,9 @@ def render(graph: Dict, pattern: str):
     dot.node('', shape='point', style='invis')
     dot.edge('', graph['startingState'], label=EPSILON)
 
-    dot.unflatten().render('./graph', view=True, format='png', cleanup=True)
+    dot.unflatten().render(path, view=True, format='png', cleanup=True)
+
+if __name__ == '__main__':
+    import json
+    import sys
+    render(json.load(sys.stdin), '', '/tmp/graph')
